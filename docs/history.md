@@ -3,7 +3,8 @@
 This document is the technical record of the original Trongate Pages feature
 from Trongate v1, produced during reverse-engineering (September 2026).
 It is intentionally a history document: what existed, how it worked, and what
-that means for the v2 module. It is not the design document — see `design.md`.
+that means for the v2 module. It is not the design document — see
+[design.md](design.md).
 
 ## Where the old implementation was found
 
@@ -187,7 +188,7 @@ Essential (the feature):
 - Slug generation + uniqueness (+ module-name conflict avoidance).
 - Admin list/create/edit/delete workflow.
 - The visual drag-and-drop editor and media manager (kept per product decision,
-  see `design.md` — it was the module's defining differentiator).
+  see [design.md](design.md) — it was the module's defining differentiator).
 - `[website]` shortcode portability.
 
 Incidental / correctly discarded:
@@ -197,7 +198,8 @@ Incidental / correctly discarded:
 - `trongate_comments` coupling on delete.
 - Per-instance extra CSS/JS directory (`trongate_pages_extra`) — app-level
   theming concern, not page storage.
-- Font Awesome dependency of the old templates (decision in `design.md`).
+- Font Awesome dependency of the old templates (decision in
+  [design.md](design.md)).
 - "Manage Articles" label and admin theme colour system.
 - The odd prod-mode behaviour where `/slug/edit` with no valid token still
   enabled the editor chrome (auth was only enforced at save time).
@@ -220,7 +222,7 @@ Incidental / correctly discarded:
 
 - Homepage was hard-wired to **record id 1** with a magic `last_updated = 0`
   "invite first-time admin to clear the homepage" flag. The v2 design decouples
-  the homepage from a specific id (see `design.md`).
+  the homepage from a specific id (see [design.md](design.md)).
 - Slugs were immutable after creation (title change did not re-slug).
 - Page URLs were single flat segments only; no nesting, no slug editing UI.
 - The `edit` URL suffix was the only editor entry point; the admin "Edit"

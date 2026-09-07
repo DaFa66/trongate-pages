@@ -1,7 +1,7 @@
 # Trongate Pages v2 — Design Record
 
 Design decisions for the standalone v2 module, made after the reverse
-engineering documented in `history.md`. Approved by Simon (DaFa) on
+engineering documented in [history.md](history.md). Approved by Simon (DaFa) on
 2026-09-07 via four decisions: port the v1 visual editor close to the
 original; fully standalone module (own `index()`, config.php + custom routes
 allowed, no engine/core-module/welcome changes); module `pages`, table
@@ -20,20 +20,25 @@ touches nothing in the framework core or in other core modules.
 trongate-pages/
 ├── Pages.php              controller (module root, v2 convention)
 ├── Pages_model.php        DB access
-├── pages.sql              schema (auto-run by v2 module import wizard in dev)
-├── css/                   editor CSS (ported) + manage screen styles
-├── js/                    editor managers (ported) + module JS
+├── pages.sql              schema (auto-run by the v2 module import wizard in dev)
+├── css/                   editor CSS (ported) + bundled Font Awesome
+├── fonts/                 Font Awesome webfonts
+├── js/                    editor manager scripts (ported)
 ├── images/                editor/media icons + images/uploads (writable)
 ├── views/
 │   ├── display.php            front-end page render
 │   ├── enable_page_edit.php   editor bootstrap (edit mode only)
-│   ├── manage.php             admin list + create modal
-│   ├── not_published_info.php dev-only notice on draft pages
+│   ├── element_adder.php      editor 'add element' palette
+│   ├── manage.php             admin list
+│   ├── create.php             admin create form
+│   ├── delete_conf.php        admin delete confirmation
+│   ├── not_published.php      dev-only notice on draft pages
 │   ├── permissions_error.php  uploads dir not writable
 │   └── default_homepage_content.php  dev seed content
-├── docs/history.md        v1 reverse-engineering record
-├── docs/design.md         this file
-└── README.md              install + usage
+├── docs/
+│   ├── history.md          v1 reverse-engineering record
+│   └── design.md           this file
+└── README.md               install + usage
 ```
 
 ## Database (table `pages`)
@@ -64,7 +69,7 @@ table, which the module does not own). Uniqueness of `url_string` stays
 code-enforced as in v1 (a UNIQUE key would turn slug collisions into hard
 errors rather than the friendly suffix behaviour). v1 → v2 migration is a
 simple `INSERT INTO pages (...) SELECT ...` plus slug/author column handling;
-documented in README, not shipped as a wizard.
+documented in the [README](../README.md), not shipped as a wizard.
 
 Homepage decoupled from id 1: the homepage is the row with
 `url_string = 'homepage'`. `Pages::index()` (the `/` route when
@@ -73,8 +78,8 @@ renders it. Homepage deletion is refused by slug check, not id check.
 
 ## Serving pages (URL strategy)
 
-Two app-level config lines in `config/config.php` (documented in README;
-nothing else changes in the app):
+Two app-level config lines in `config/config.php` (documented in the
+[README](../README.md); nothing else changes in the app):
 
 - `DEFAULT_MODULE` = `'pages'`  → `/` is served by `Pages::index()`
   (homepage record).
@@ -165,8 +170,8 @@ adaptation, not a rewrite:
 6. Font Awesome: the module keeps FA classes in the editor chrome as v1 did,
    but the FA stylesheet is loaded by the module only in edit mode (module
    ships/loads it locally in `css/`, no CDN dependency). Page *content* that
-   uses FA icons is the site owner's choice; README documents how to load FA
-   site-wide if desired.
+   uses FA icons is the site owner's choice; the [README](../README.md)
+   documents how to load FA site-wide if desired.
 
 Editor behaviour preserved: element types (headline h1–h5, text, image,
 button, YouTube, divider, code), node selection/DOM manipulation, media
@@ -177,8 +182,9 @@ authenticated admins; public visitors download nothing extra.
 ## Deliberately omitted (and why)
 
 - `Standard_endpoints` / `api.json` / API explorer — dead framework machinery.
-- Slug editing UI — v1 never had it; keep scope tight (README documents that
-  renaming a page title is separate from slug; slugs are created on insert).
+- Slug editing UI — v1 never had it; keep scope tight (the
+  [README](../README.md) documents that renaming a page title is separate from
+  slug; slugs are created on insert).
   *(Revisit only if Simon asks.)*
 - Page nesting / parent-child pages — framework URLs are flat-segment based;
   v1 was flat; nested pages add a tree UI for little gain here.
@@ -191,7 +197,8 @@ authenticated admins; public visitors download nothing extra.
 
 ## Migration from v1
 
-Trivial and worth supporting (documented in README as optional SQL):
+Trivial and worth supporting (documented in the [README](../README.md) as
+optional SQL):
 `trongate_pages` → `pages` is a straight column-for-column copy (id, url_string,
 page_title, meta_keywords, meta_description, page_body, date_created,
 last_updated, published, created_by). `created_by` ids carry over only if the

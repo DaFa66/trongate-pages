@@ -37,27 +37,51 @@ engine or in core modules is modified.
 
 ## Installation
 
-1. Copy the module folder into your application:
+The repository *is* the module folder. Get it from GitHub, then place it in
+your application as `modules/pages`.
+
+**Option A - download the ZIP (easiest, no git needed)**
+
+1. Download the archive:
+   <https://github.com/DaFa66/trongate-pages/archive/refs/heads/main.zip>
+2. Extract it. The folder inside is named `trongate-pages-main`.
+3. Rename that folder to `pages` and move it into your application's
+   `modules/` directory, so the layout looks like:
 
    ```
-   cp -r pages /path/to/app/modules/pages
+   modules/pages/Pages.php
    ```
 
-   (The folder itself is the module: `Pages.php`, `Pages_model.php`,
-   `pages.sql`, `css/`, `fonts/`, `js/`, `images/`, `views/`.)
+**Option B - git clone**
 
-2. Make the uploads folder writable by the web server:
+```bash
+git clone https://github.com/DaFa66/trongate-pages.git modules/pages
+rm -rf modules/pages/.git   # the app should hold a copy, not a checkout
+```
+
+**Option C - from an existing copy**
+
+```bash
+cp -r pages /path/to/app/modules/pages
+```
+
+Whichever option you use, you can delete the `docs/` folder and `README.md`
+from the installed copy - they are for reading, not for running.
+
+Next, three setup steps:
+
+1. Make the uploads folder writable by the web server:
 
    ```
    modules/pages/images/uploads/
    ```
 
-3. Import `pages.sql` into your application database. In dev mode the module
-   import wizard also picks it up automatically (first visit to any `pages`
-   URL shows the wizard; choose **Run SQL** - it imports the schema and
-   removes the file from your app copy).
+2. Import `pages.sql` into your application database. In dev mode the module
+   import wizard also picks it up automatically: the first visit to any
+   `pages` URL shows the wizard - choose **Run SQL**, which imports the schema
+   and removes the file from your app copy.
 
-4. Give the module two app-level config constants in `config/config.php`:
+3. Give the module two app-level config constants in `config/config.php`:
 
    ```php
    define('DEFAULT_MODULE', 'pages');            // site root = the homepage page
@@ -71,7 +95,7 @@ engine or in core modules is modified.
      `pages/display/<slug>` and edit mode at `pages/display/<slug>/edit`.
      Set it to get clean URLs (`/<slug>`).
 
-5. Log in to the admin panel and visit **pages/manage** (add a link to your
+4. Log in to the admin panel and visit **pages/manage** (add a link to your
    admin nav if you like). The dev-mode auto-login also applies, so a fresh
    install is immediately usable.
 
