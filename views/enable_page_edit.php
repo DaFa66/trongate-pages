@@ -1,4 +1,10 @@
 <script>
+  // Font Awesome 4.7 (bundled locally) - the editor controls use fa glyphs.
+  const faStyleSheet = document.createElement('link');
+  faStyleSheet.rel = 'stylesheet';
+  faStyleSheet.href = '<?= BASE_URL ?>pages<?= MODULE_ASSETS_TRIGGER ?>/css/font-awesome.min.css';
+  document.head.appendChild(faStyleSheet);
+
   const trongatePagesObj = {
     baseUrl: '<?= BASE_URL ?>',
     trongatePagesId: '<?= $record_id ?>',

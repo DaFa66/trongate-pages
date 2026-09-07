@@ -44,7 +44,7 @@ engine or in core modules is modified.
    ```
 
    (The folder itself is the module: `Pages.php`, `Pages_model.php`,
-   `pages.sql`, `css/`, `js/`, `images/`, `views/`.)
+   `pages.sql`, `css/`, `fonts/`, `js/`, `images/`, `views/`.)
 
 2. Make the uploads folder writable by the web server:
 
