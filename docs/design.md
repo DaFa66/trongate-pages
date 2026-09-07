@@ -99,12 +99,15 @@ Slugs stay flat and single-segment (v1 behaviour, documented limitation).
 - Entry point `pages/manage` (admin session required on every admin method via
   `$this->trongate_security->make_sure_allowed()`).
 - List: title, URL, author, created/updated, published state, edit action.
-  Search + pagination via the v2 pagination module. Light MX niceties:
-  publish/draft toggle and delete confirm inline (no full page reload).
-- Create modal asks for the page title (as v1). `submit()` validates title
+  Search + pagination via the v2 pagination module. Light MX niceties: the
+  publish/draft toggle posts via MX and swaps the status badge in place
+  (no full page reload).
+- Create asks for the page title on its own admin screen (v1 used a modal;
+  a dedicated screen needs no modal JavaScript). `submit()` validates title
   uniqueness + module-name conflict, inserts an unpublished page, redirects to
   the edit URL of the new page.
-- Edit opens the public page in edit mode (`/slug/edit`), v1 workflow.
+- Delete uses a confirmation screen (`delete_conf`) then `submit_delete`,
+  mirroring the standard generated v2 CRUD flow; the homepage slug is guarded.
 - Editor save hits plain controller endpoints (Standard_endpoints is gone).
 
 ## Endpoints (all editor endpoints admin-gated)
@@ -115,7 +118,7 @@ Slugs stay flat and single-segment (v1 behaviour, documented limitation).
 | `pages/index` | homepage (DEFAULT_MODULE) | |
 | `pages/manage` | admin list | |
 | `pages/submit` | create page (title) | form + CSRF via validation |
-| `pages/submit_body` | editor save (page_body + meta) | JSON body + CSRF header/field |
+| `pages/update_page/{id}` | editor save (partial: body, title, slug, meta, published) | JSON body + `trongateToken` CSRF header |
 | `pages/submit_delete` | delete page (homepage-guarded) | |
 | `pages/submit_image_upload/{id}` | media upload | JSON response |
 | `pages/submit_delete_image` | media delete | |
@@ -131,11 +134,16 @@ Internal helpers are `private`/`protected` or `public` with `block_url()` when
 another module may call them (v2 three-tier method protection). CSRF for the
 JSON endpoints: the editor is only ever bootstrapped inside an admin session,
 token injected into the page by the controller and echoed back by the editor
-in a `X-CSRF-Token` header, verified server-side with `hash_equals` against
-the session token (same convention as `validation->run()`). Image uploads are
-validated server-side (type/size/dimensions as v1), names sanitised,
-`move_uploaded_file` only, destination constrained to
-`modules/pages/images/uploads/`.
+in a `X-CSRF-Token` header (wire name `trongateToken`, kept from v1),
+verified server-side with `hash_equals` against the session token (same
+convention as `validation->run()`). Editor saves are partial updates: only the
+fields present in the JSON body are written (a quick save sends only
+`page_body`; the settings modal sends the full set). Endpoints that return
+JSON for the editor use raw `json_encode` output; the framework `json()`
+helper wraps output in `<pre>` for human display and cannot be parsed by the
+editor's `JSON.parse`. Image uploads are validated server-side
+(type/size/dimensions as v1), names sanitised, `move_uploaded_file` only,
+destination constrained to `modules/pages/images/uploads/`.
 
 ## Visual editor port (v1 → v2)
 

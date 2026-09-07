@@ -38,6 +38,82 @@
     '<?= BASE_URL ?>pages<?= MODULE_ASSETS_TRIGGER ?>/js/youtube_manager.js'
   ];
 
+  const tgpModals = [
+    'tgp-button-modal',
+    'tgp-camera-modal',
+    'tgp-code-view-modal',
+    'tgp-conf-trashify-modal',
+    'tgp-confirm-save-page',
+    'tgp-create-page-el',
+    'tgp-delete-page-modal',
+    'tgp-image-modal',
+    'tgp-intercept-add-el',
+    'tgp-link-modal',
+    'tgp-media-manager',
+    'tgp-modal',
+    'tgp-mobi-options',
+    'tgp-settings-modal',
+    'tgp-video-overlay',
+    'tgp-youtube-modal'
+  ];
+
+  // Modal helpers (ported from the v1 app.js so the module is self-contained
+  // and does not depend on any application-level JavaScript).
+  const body = document.getElementsByTagName('body')[0];
+  function _(elementId) {
+    return document.getElementById(elementId);
+  }
+
+  function openModal(modalId) {
+    var pageOverlay = document.getElementById('overlay');
+
+    if (typeof pageOverlay == 'undefined' || pageOverlay == null) {
+      var modalContainer = document.createElement('div');
+      modalContainer.setAttribute('id', 'modal-container');
+      modalContainer.setAttribute('style', 'z-index: 3;');
+      body.prepend(modalContainer);
+
+      var overlay = document.createElement('div');
+      overlay.setAttribute('id', 'overlay');
+      overlay.setAttribute('style', 'z-index: 2');
+      body.prepend(overlay);
+
+      var targetModal = _(modalId);
+      targetModalContent = targetModal.innerHTML;
+      targetModal.remove();
+
+      var newModal = document.createElement('div');
+      newModal.setAttribute('class', 'modal');
+      newModal.setAttribute('id', modalId);
+      newModal.style.zIndex = 4;
+      newModal.innerHTML = targetModalContent;
+      modalContainer.appendChild(newModal);
+
+      setTimeout(() => {
+        newModal.style.opacity = 1;
+        newModal.style.marginTop = '12vh';
+      }, 0);
+    }
+  }
+
+  function closeModal() {
+    var modalContainer = document.getElementById('modal-container');
+    if (modalContainer) {
+      var openModal = modalContainer.firstChild;
+      openModal.style.zIndex = -4;
+      openModal.style.opacity = 0;
+      openModal.style.marginTop = '12vh';
+      openModal.style.display = 'none';
+      document.body.appendChild(openModal);
+      modalContainer.remove();
+
+      var overlay = document.getElementById('overlay');
+      if (overlay) {
+        overlay.remove();
+      }
+    }
+  }
+
   function tgpLoadScripts(urls) {
     const promises = urls.map(url => {
       return new Promise((resolve, reject) => {

@@ -99,7 +99,7 @@ function tgpOpenCreatePageEl() {
   headlinePara.style.marginTop = 0;
   modalBody.appendChild(headlinePara);
 
-  const targetUrl = trongatePagesObj.baseUrl + "tgp_element_adder";
+  const targetUrl = trongatePagesObj.baseUrl + "pages/element_adder";
 
   const http = new XMLHttpRequest();
   http.open("get", targetUrl);

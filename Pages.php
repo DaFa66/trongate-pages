@@ -327,53 +327,66 @@ class Pages extends Trongate {
 
         $body = $this->read_json_body();
 
-        $page_title = trim((string) ($body['page_title'] ?? ''));
-        $slug = strtolower(trim((string) ($body['url_string'] ?? '')));
-        $page_body = (string) ($body['page_body'] ?? '');
-        $meta_keywords = (string) ($body['meta_keywords'] ?? '');
-        $meta_description = (string) ($body['meta_description'] ?? '');
-        $published = (isset($body['published']) && (int) $body['published'] === 1) ? 1 : 0;
+        $data = [];
 
-        if ($page_title === '') {
+        if (array_key_exists('page_title', $body)) {
+            $page_title = trim((string) $body['page_title']);
+            if ($page_title === '') {
+                http_response_code(400);
+                echo 'A page title is required.';
+                return;
+            }
+            if ($this->model->page_title_exists($page_title, $update_id)) {
+                http_response_code(400);
+                echo 'That page title is already in use by another webpage.';
+                return;
+            }
+            $data['page_title'] = $page_title;
+        }
+
+        if (array_key_exists('url_string', $body)) {
+            $slug = strtolower(trim((string) $body['url_string']));
+            if (!preg_match('/^[a-z0-9\-]+$/', $slug) || ($slug === '')) {
+                http_response_code(400);
+                echo 'The URL string may only contain lowercase letters, numbers and hyphens.';
+                return;
+            }
+            if ($this->module_exists($slug)) {
+                http_response_code(400);
+                echo 'The URL string conflicts with an existing module name.';
+                return;
+            }
+            if ($this->model->url_string_exists($slug, $update_id)) {
+                http_response_code(400);
+                echo 'That URL string is already in use by another webpage.';
+                return;
+            }
+            $data['url_string'] = $slug;
+        }
+
+        if (array_key_exists('meta_keywords', $body)) {
+            $data['meta_keywords'] = (string) $body['meta_keywords'];
+        }
+
+        if (array_key_exists('meta_description', $body)) {
+            $data['meta_description'] = (string) $body['meta_description'];
+        }
+
+        if (array_key_exists('published', $body)) {
+            $data['published'] = ((int) $body['published'] === 1) ? 1 : 0;
+        }
+
+        if (array_key_exists('page_body', $body)) {
+            $data['page_body'] = (string) $body['page_body'];
+        }
+
+        if (count($data) === 0) {
             http_response_code(400);
-            echo 'A page title is required.';
+            echo 'Nothing to update.';
             return;
         }
 
-        if (!preg_match('/^[a-z0-9\-]+$/', $slug) || ($slug === '')) {
-            http_response_code(400);
-            echo 'The URL string may only contain lowercase letters, numbers and hyphens.';
-            return;
-        }
-
-        if ($this->module_exists($slug)) {
-            http_response_code(400);
-            echo 'The URL string conflicts with an existing module name.';
-            return;
-        }
-
-        if ($this->model->url_string_exists($slug, $update_id)) {
-            http_response_code(400);
-            echo 'That URL string is already in use by another webpage.';
-            return;
-        }
-
-        if ($this->model->page_title_exists($page_title, $update_id)) {
-            http_response_code(400);
-            echo 'That page title is already in use by another webpage.';
-            return;
-        }
-
-        $data = [
-            'url_string' => $slug,
-            'page_title' => $page_title,
-            'meta_keywords' => $meta_keywords,
-            'meta_description' => $meta_description,
-            'page_body' => $page_body,
-            'published' => $published,
-            'last_updated' => time()
-        ];
-
+        $data['last_updated'] = time();
         $this->model->update_page($update_id, $data);
         http_response_code(200);
     }
@@ -394,7 +407,7 @@ class Pages extends Trongate {
             return;
         }
 
-        json([
+        $this->send_json([
             'url_string' => $page->url_string,
             'page_title' => $page->page_title,
             'meta_keywords' => $page->meta_keywords ?? '',
@@ -484,7 +497,16 @@ class Pages extends Trongate {
             }
         }
 
-        json($items);
+        $this->send_json($items);
+    }
+
+    /**
+     * Send a raw JSON response (the editor JavaScript parses responseText
+     * directly; the framework json() helper wraps output for display).
+     */
+    private function send_json(array $data): void {
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($data);
     }
 
     /**
@@ -706,6 +728,10 @@ class Pages extends Trongate {
             $this->render_draft_page($data);
             return;
         }
+
+        // Clear the 404 code that the ERROR_404 dispatcher set before routing
+        // here when this page was found via URL interception.
+        http_response_code(200);
 
         $data['view_module'] = 'pages';
         $data['view_file'] = 'display';
