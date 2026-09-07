@@ -1,2 +1,3 @@
 images/uploads/*
 !images/uploads/index.php
+.hermes-tmp*
