@@ -6,6 +6,13 @@ It is intentionally a history document: what existed, how it worked, and what
 that means for the v2 module. It is not the design document — see
 [design.md](design.md).
 
+## Credit
+
+The original v1 Trongate Pages feature was written by David Connelly, the creator
+of Trongate. It was hand-written and tested over countless hours, much of it
+live streamed, and it remains a golden jewel of the Trongate ecosystem. This
+v2 module exists because of that work.
+
 ## Where the old implementation was found
 
 1. **Git history of `trongate/trongate-framework`** (local clone with full
