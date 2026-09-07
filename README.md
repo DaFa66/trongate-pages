@@ -126,9 +126,9 @@ away, but deleting the homepage record is refused).
   helper wraps output in `<pre>` for display and is not suitable for
   JavaScript `JSON.parse`).
 - The visual editor JS is the v1 editor, ported with surgical URL/endpoint
-  changes only (see `docs/history.md`). Modal helpers that v1 relied on from
-  app-level `app.js` are bundled into the module's bootstrap view so the
-  module is self-contained.
+  changes only (see [docs/history.md](docs/history.md)). Modal helpers that v1
+  relied on from app-level `app.js` are bundled into the module's bootstrap
+  view so the module is self-contained.
 - The module depends only on core Trongate v2 modules (`trongate_security`,
   `trongate_tokens`, `validation`, `pagination`, `templates`, `form`,
   `flashdata`) - all of which ship with the framework.
@@ -157,5 +157,9 @@ Notes:
 
 ## Documentation
 
-- `docs/history.md` - reverse-engineering record of the v1 feature.
-- `docs/design.md` - design decisions for the v2 module.
+- [docs/history.md](docs/history.md) - reverse-engineering record of the v1
+  feature: where it lived in the framework history, how it worked, what it
+  depended on and what was stripped for v2.
+- [docs/design.md](docs/design.md) - design decisions behind the v2 module:
+  routing via `ERROR_404`, the one-module call, the editor port scope,
+  security model and the v1-to-v2 endpoint mapping.

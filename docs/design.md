@@ -5,7 +5,7 @@ engineering documented in `history.md`. Approved by Simon (DaFa) on
 2026-09-07 via four decisions: port the v1 visual editor close to the
 original; fully standalone module (own `index()`, config.php + custom routes
 allowed, no engine/core-module/welcome changes); module `pages`, table
-`pages`; repo at `C:\phpup\www\trongate-pages`.
+`pages`; the module developed in its own repository.
 
 ## Positioning
 

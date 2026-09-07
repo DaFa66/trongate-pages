@@ -7,15 +7,14 @@ that means for the v2 module. It is not the design document — see `design.md`.
 
 ## Where the old implementation was found
 
-1. **Git history of `trongate/trongate-framework`** (local clone at
-   `C:\phpup\www\trongate-framework`, full history including `master`/`v1`/`v2`
-   branches and tags back to v1.2.x). The framework repository itself was the
-   application skeleton in the v1 era, and `trongate_pages` lived at
-   `modules/trongate_pages/` inside it.
-2. **The `b3` test application** (`C:\phpup\www\b3`) — itself a git checkout of
-   the framework at commit `4749af0` (`v1.3.3049-75-g4749af0`, May 2024 era),
-   containing a working copy of the module. Used as a live reference and
-   functional test environment (admin `admin`/`admin`, MariaDB database `b3`).
+1. **Git history of `trongate/trongate-framework`** (local clone with full
+   history, including `master`/`v1`/`v2` branches and tags back to v1.2.x).
+   The framework repository itself was the application skeleton in the v1 era,
+   and `trongate_pages` lived at `modules/trongate_pages/` inside it.
+2. **The `b3` test application** — a git checkout of the framework at commit
+   `4749af0` (`v1.3.3049-75-g4749af0`, May 2024 era), containing a working
+   copy of the module. Used as a live reference and functional test
+   environment (default v1 administrator account, MariaDB database `b3`).
 
 Neither source alone was treated as authoritative. b3's copy was compared
 against the final historical version in git (see below).
@@ -123,7 +122,7 @@ admin list; changing title slug is what `url_string` was keyed on.
 
 ### Administration
 
-- Login: `trongate_administrators` module (admin/admin in b3).
+- Login: `trongate_administrators` module (default v1 admin account in b3).
 - `manage()`: admin list of pages (search, pagination with per-page options,
   author, created/updated dates, published indicator, edit links). "Create New
   Webpage" modal asked only for a page title → `submit()` validated the title
